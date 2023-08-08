@@ -7,25 +7,28 @@ import (
 )
 
 var (
-	AppMode			string
-	HttpPort		string
-	ReadTimeout		time.Duration
-	WriteTimeout	time.Duration
+	AppMode      string
+	HttpPort     string
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
 
-	DbHost			string
-	DbPort			string
-	DbUser			string
-	DbPassWord		string
-	DbName			string
+	Md5Key string
+
+	DbHost     string
+	DbPort     string
+	DbUser     string
+	DbPassWord string
+	DbName     string
 )
 
-func init()  {
-	file,err := ini.Load("conf/config.ini")
+func init() {
+	file, err := ini.Load("conf/config.ini")
 	if err != nil {
-		fmt.Println("配置文件读取失败，请检查文件路径:",err)
+		fmt.Println("配置文件读取失败，请检查文件路径:", err)
 	}
 	LoadServer(file)
 	LoadData(file)
+	LoadApp(file)
 }
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").String()
@@ -33,6 +36,10 @@ func LoadServer(file *ini.File) {
 	ReadTimeout = time.Duration(file.Section("server").Key("ReadTimeout").MustInt(60)) * time.Second
 	WriteTimeout = time.Duration(file.Section("server").Key("WriteTimeout").MustInt(60)) * time.Second
 }
+func LoadApp(file *ini.File) {
+	Md5Key = file.Section("app").Key("Md5Key").String()
+}
+
 func LoadData(file *ini.File) {
 	DbHost = file.Section("database").Key("DbHost").String()
 	DbPort = file.Section("database").Key("DbPort").String()

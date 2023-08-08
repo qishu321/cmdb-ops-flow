@@ -7,6 +7,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"time"
 )
+
 var db *gorm.DB
 var err error
 
@@ -26,7 +27,7 @@ func InitDb() {
 	db.DB().SetMaxIdleConns(20)  //设置连接池，空闲
 	db.DB().SetMaxOpenConns(100) //打开
 	db.DB().SetConnMaxLifetime(time.Second * 30)
-	db.AutoMigrate(Cmdb{},)
+	db.AutoMigrate(Cmdb{}, User{})
 	db.LogMode(true)
 
 }
