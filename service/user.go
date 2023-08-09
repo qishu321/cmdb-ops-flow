@@ -12,7 +12,7 @@ import (
 func AddUser(user models.User) (data interface{}, err error) {
 	passsword := common.FixMd5(user.Password + conf.Md5Key)
 	daoUser := models.User{
-		Userid:   common.GenerateRandomUserID(),
+		Userid:   common.GenerateRandomNumber(),
 		Username: user.Username,
 		Password: passsword,
 	}

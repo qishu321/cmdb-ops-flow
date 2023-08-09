@@ -12,7 +12,8 @@ var (
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 
-	Md5Key string
+	Md5Key     string
+	Encryptkey string
 
 	DbHost     string
 	DbPort     string
@@ -38,6 +39,8 @@ func LoadServer(file *ini.File) {
 }
 func LoadApp(file *ini.File) {
 	Md5Key = file.Section("app").Key("Md5Key").String()
+	Encryptkey = file.Section("app").Key("Encryptkey").String()
+
 }
 
 func LoadData(file *ini.File) {

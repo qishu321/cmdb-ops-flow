@@ -34,12 +34,16 @@ func InitRouter() {
 		apiv1.POST("/user/logout", api.Logout)
 		apiv1.POST("/user/info", api.Info)
 
+		apiv1.POST("/cmdb/addCmdb", api.AddCmdb)
+		apiv1.POST("/cmdb/getCmdb", api.GetCmdb)
+		apiv1.POST("/cmdb/editCmdb", api.EditCmdb)
+		apiv1.POST("/cmdb/delCmdb", api.DelCmdb)
+		apiv1.POST("/cmdb/GetSearchCmdb", api.GetSearchCmdb)
+
 	}
 	adminuser := r.Group("/api/admin/user")
 	{
 		adminuser.POST("/login", api.Login)
-		adminuser.GET("/info", api.Info)
-		adminuser.POST("/getUser", api.GetUser)
 
 	}
 

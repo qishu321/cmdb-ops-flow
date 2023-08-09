@@ -12,8 +12,8 @@ import (
 func Token() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		token := context.Request.Header.Get("X-Token")
-		fmt.Println("Token value:", token) // 在这里打印 Token 的值
-		fmt.Println(token)
+		//fmt.Println("Token value:", token) // 在这里打印 Token 的值
+		//fmt.Println(token)
 		token_exsits, err := models.TokenInfo(token)
 		if err != nil {
 			resospnseWithError(401, "非法请求", context)
@@ -24,7 +24,7 @@ func Token() gin.HandlerFunc {
 			//先做时间判断
 			target_time, _ := time.ParseInLocation("2006-01-02 15:04:05", time.Time(token_exsits[0].ExpirationAt).Format("2006-01-02 15:04:05"), time.Local) //需要加上time.Local不然会自动加八小时
 			if target_time.Unix() <= time.Now().Unix() {
-				fmt.Println("过期报错")
+				//fmt.Println("过期报错")
 				//过期报错
 				resospnseWithError(401, "timeout", context)
 				return

@@ -1,8 +1,9 @@
 package msg
 
 const (
-	SUCCSE = 200
-	ERROR  = 500
+	SUCCSE        = 200
+	ERROR         = 500
+	InvalidParams = 400
 
 	// ERROR_USERNAME_USED code= 1000... 用户模块的错误
 	ERROR_USERNAME_USED    = 1001
@@ -16,11 +17,20 @@ const (
 	ERROR_USER_NO_PASSWD   = 1009
 	ERROR_USER_NO_LOGIN    = 1010
 	ERROR_USER_NO_LOGOUT   = 1011
+
+	// ERROR_CMDB_INFO code= 2000... CMDB模块的错误
+	ERROR_CMDB_GET_INFO     = 2001
+	ERROR_CMDB_GET_WRONG    = 2002
+	ERROR_CMDB_DELETE_WRONG = 2003
+	ERROR_CMDB_ADD_WRONG    = 2004
+	ERROR_CMDB_EDIT_WRONG   = 2005
 )
 
 var codeMsg = map[int]string{
-	SUCCSE:                 "OK",
-	ERROR:                  "FAIL",
+	SUCCSE:        "OK",
+	ERROR:         "FAIL",
+	InvalidParams: "请求参数错误",
+
 	ERROR_USERNAME_USED:    "用户名已存在！",
 	ERROR_PASSWORD_WRONG:   "密码错误",
 	ERROR_USER_NOT_EXIST:   "用户不存在",
@@ -31,6 +41,12 @@ var codeMsg = map[int]string{
 	ERROR_USER_NO_RIGHT:    "该用户无权限",
 	ERROR_USER_NO_PASSWD:   "未填写用户名或者密码",
 	ERROR_USER_NO_LOGOUT:   "登录失败",
+
+	ERROR_CMDB_GET_INFO:     "CMDB已存在",
+	ERROR_CMDB_GET_WRONG:    "CMDB不存在",
+	ERROR_CMDB_DELETE_WRONG: "CMDB删除失败",
+	ERROR_CMDB_ADD_WRONG:    "CMDB新增失败",
+	ERROR_CMDB_EDIT_WRONG:   "CMDB修改失败",
 }
 
 func GetErrMsg(code int) string {
