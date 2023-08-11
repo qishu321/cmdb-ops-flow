@@ -24,6 +24,18 @@ const (
 	ERROR_CMDB_DELETE_WRONG = 2003
 	ERROR_CMDB_ADD_WRONG    = 2004
 	ERROR_CMDB_EDIT_WRONG   = 2005
+
+	ERROR_SCRIPT_GET_INFO     = 3001
+	ERROR_SCRIPT_GET_WRONG    = 3002
+	ERROR_SCRIPT_DELETE_WRONG = 3003
+	ERROR_SCRIPT_ADD_WRONG    = 3004
+	ERROR_SCRIPT_EDIT_WRONG   = 3005
+
+	ERROR_job_GET_INFO     = 3101
+	ERROR_job_GET_WRONG    = 3102
+	ERROR_job_DELETE_WRONG = 3103
+	ERROR_job_ADD_WRONG    = 3104
+	ERROR_job_EDIT_WRONG   = 3105
 )
 
 var codeMsg = map[int]string{
@@ -47,6 +59,18 @@ var codeMsg = map[int]string{
 	ERROR_CMDB_DELETE_WRONG: "CMDB删除失败",
 	ERROR_CMDB_ADD_WRONG:    "CMDB新增失败",
 	ERROR_CMDB_EDIT_WRONG:   "CMDB修改失败",
+
+	ERROR_SCRIPT_GET_INFO:     "SCRIPT脚本已存在",
+	ERROR_SCRIPT_GET_WRONG:    "SCRIPT脚本不存在",
+	ERROR_SCRIPT_DELETE_WRONG: "SCRIPT脚本删除失败",
+	ERROR_SCRIPT_ADD_WRONG:    "SCRIPT脚本新增失败",
+	ERROR_SCRIPT_EDIT_WRONG:   "SCRIPT脚本修改失败",
+
+	ERROR_job_GET_INFO:     "job工单已存在",
+	ERROR_job_GET_WRONG:    "job工单不存在",
+	ERROR_job_DELETE_WRONG: "job工单删除失败",
+	ERROR_job_ADD_WRONG:    "job工单新增失败",
+	ERROR_job_EDIT_WRONG:   "job工单修改失败",
 }
 
 func GetErrMsg(code int) string {

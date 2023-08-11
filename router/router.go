@@ -40,10 +40,19 @@ func InitRouter() {
 		apiv1.POST("/cmdb/delCmdb", api.DelCmdb)
 		apiv1.POST("/cmdb/GetSearchCmdb", api.GetSearchCmdb)
 
+		apiv1.POST("/cmdb/ssh/command", api.SshCommand)
+		apiv1.GET("/cmdb/ssh/webssh", api.VisitorWebsocketServer)
+
+		apiv1.POST("/script/addScript", api.AddScript)
+		apiv1.POST("/script/getScript", api.GetScript)
+		apiv1.POST("/script/editScript", api.EditScript)
+		apiv1.POST("/script/delScript", api.DelScript)
+
 	}
 	adminuser := r.Group("/api/admin/user")
 	{
 		adminuser.POST("/login", api.Login)
+		adminuser.GET("/ssh/webssh", api.VisitorWebsocketServer)
 
 	}
 

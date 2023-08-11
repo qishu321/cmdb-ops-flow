@@ -9,20 +9,20 @@ import (
 	"net/http"
 )
 
-func AddCmdb(c *gin.Context) {
-	var data models.Cmdb
+func AddScript(c *gin.Context) {
+	var data models.ScriptManager
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, err.Error(), msg.GetErrMsg(msg.ERROR)))
 		return
 	}
-	code := models.Checkcmdb(data.Cmdbname)
+	code := models.CheckScript(data.Script)
 	if code != msg.SUCCSE {
-		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, "Cmdbname不能重复", msg.GetErrMsg(msg.ERROR)))
+		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, "Script name不能重复", msg.GetErrMsg(msg.ERROR)))
 		return
 	}
 
 	// 调用 service.AddCmdb 执行业务逻辑
-	list, err := service.AddCmdb(data)
+	list, err := service.AddScript(data)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -31,29 +31,18 @@ func AddCmdb(c *gin.Context) {
 	c.JSON(http.StatusOK, (&result.Result{}).Ok(code, list, msg.GetErrMsg(code)))
 
 }
-func GetSearchCmdb(c *gin.Context) {
+
+func GetScript(c *gin.Context) {
+	//var data models.ScriptManager
 	var data struct {
-		Keyword string `form:"keyword" binding:"required"`
+		ID int `json:"id"`
 	}
-	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, err.Error(), msg.GetErrMsg(msg.ERROR)))
-		return
-	}
-	list, code := models.SearchCmdb(data.Keyword)
-	if code != msg.SUCCSE {
-		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, nil, msg.GetErrMsg(msg.ERROR)))
-		return
-	}
-	c.JSON(http.StatusOK, (&result.Result{}).Ok(code, list, msg.GetErrMsg(code)))
-}
 
-func GetCmdb(c *gin.Context) {
-	var data models.Cmdb
 	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, err.Error(), msg.GetErrMsg(msg.ERROR)))
+		c.JSON(http.StatusOK, (&result.Result{}).Error(400, err.Error(), msg.GetErrMsg(msg.ERROR)))
 		return
 	}
-	list, err := service.GetCmdbList(data)
+	list, err := service.GetScriptList(data.ID)
 	if err != nil {
 		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, err.Error(), msg.GetErrMsg(msg.ERROR)))
 		return
@@ -63,13 +52,13 @@ func GetCmdb(c *gin.Context) {
 
 }
 
-func EditCmdb(c *gin.Context) {
-	var data models.Cmdb
+func EditScript(c *gin.Context) {
+	var data models.ScriptManager
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, err.Error(), msg.GetErrMsg(msg.ERROR)))
 		return
 	}
-	list, err := service.EditCmdb(data)
+	list, err := service.EditScript(data)
 	if err != nil {
 		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, err.Error(), msg.GetErrMsg(msg.ERROR)))
 		return
@@ -77,13 +66,16 @@ func EditCmdb(c *gin.Context) {
 	code := msg.SUCCSE
 	c.JSON(http.StatusOK, (&result.Result{}).Ok(code, list, msg.GetErrMsg(code)))
 }
-func DelCmdb(c *gin.Context) {
-	var data models.Cmdb
+func DelScript(c *gin.Context) {
+	var data struct {
+		MachineID int64 `json:"machineid" validate:"required"`
+	}
+	//var data models.ScriptManager
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, err.Error(), msg.GetErrMsg(msg.ERROR)))
 		return
 	}
-	code := models.Delcmdb(data.Cmdbid)
+	code := models.DelScript(data.MachineID)
 
 	c.JSON(http.StatusOK, (&result.Result{}).Ok(code, msg.SUCCSE, msg.GetErrMsg(code)))
 

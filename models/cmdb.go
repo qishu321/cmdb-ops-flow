@@ -81,6 +81,7 @@ func Checkcmdb(name string) (code int) {
 	}
 	return msg.SUCCSE
 }
+
 func SearchCmdb(keyword string) ([]Cmdb, int) {
 	var cmdb []Cmdb
 	db.Where("cmdbname LIKE ? OR public_ip LIKE ? OR private_ip LIKE ? OR label LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%").Find(&cmdb)
