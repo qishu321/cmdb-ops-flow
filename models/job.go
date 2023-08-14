@@ -10,15 +10,20 @@ import (
 //jobleve 优先级判断，判断jobgroup组里的所有数据，然后根据jobleve的从小往大去排序，创建的时候要进行判断，不能有相同的jobleve
 
 type Job struct {
-	ID               int    `json:"id" db:"id" form:"id"`
-	Jobid            int64  `gorm:"type:bigint;not null" json:"jobid" validate:"required"`
-	Jobleve          int64  `json:"jobleve" db:"jobleve" for:"jobleve" column:jobleve"`
-	Jobname          string `json:"jobname" db:"jobname" form:"jobname"`
-	Jobgroupid       int64  `json:"jobgroupid" db:"jobgroupid" for:"jobgroupid" column:jobgroupid"`
+	ID      int   `json:"id" db:"id" form:"id"`
+	Jobid   int64 `gorm:"type:bigint;not null" json:"jobid" validate:"required"`
+	Jobleve int64 `json:"jobleve" db:"jobleve" form:"jobleve" column:"jobleve"`
+
+	Jobname   string     `json:"jobname" db:"jobname" form:"jobname"`
+	Jobgroup  string     `json:"jobgroup" db:"jobgroup" form:"jobgroup"`
+	Jobgroups []JobGroup `gorm:"FOREIGNKEY:Jobgroupname;ASSOCIATION_FOREIGNKEY:Jobgroup"`
+
+	//Jobgroupid       int64  `json:"jobgroupid" db:"jobgroupid" for:"jobgroupid" column:jobgroupid"`
 	Params           string `json:"params" db:"params" form:"params"`
-	Machineid_Script int64  `json:"machineid_script" db:"machineid_script" for:"machineid_script" column:machineid_script"`
-	Type             string `json:"type" binding:"required" form:"type"`
-	Label            string `json:"label" db:"label" form:"label"`
+	Machineid_Script int64  `json:"machineid_script" db:"machineid_script" form:"machineid_script" column:"machineid_script"`
+
+	Type  string `json:"type"  form:"type"`
+	Label string `json:"label" db:"label" form:"label"`
 }
 
 func AddJob(Script Job) (interface{}, error) {
@@ -69,7 +74,7 @@ func GetJobList(id int) ([]Job, error) {
 		res := db.Debug().Where("id = ?", id).Find(&list)
 		return list, res.Error
 	} else {
-		res := db.Debug().Find(&list)
+		res := db.Debug().Preload("Jobgroups").Find(&list)
 		return list, res.Error
 	}
 }

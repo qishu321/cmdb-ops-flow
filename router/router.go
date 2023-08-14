@@ -48,6 +48,17 @@ func InitRouter() {
 		apiv1.POST("/script/editScript", api.EditScript)
 		apiv1.POST("/script/delScript", api.DelScript)
 
+		apiv1.POST("/job/addJob", api.AddJob)
+		apiv1.POST("/job/getJob", api.GetJob)
+		apiv1.POST("/job/editJob", api.EditJob)
+		apiv1.POST("/job/delJob", api.DelJob)
+
+		apiv1.POST("/job/Group/addJobGroup", api.AddJobGroup)
+		apiv1.POST("/job/Group/GetJobGroup", api.GetJobGroup)
+		apiv1.POST("/job/Group/EditJobGroup", api.EditJobGroup)
+		apiv1.POST("/job/Group/DelJobGroup", api.DelJobGroup)
+		apiv1.POST("/job/Group/GetSearchJobGroup", api.GetSearchJobGroup)
+
 	}
 	adminuser := r.Group("/api/admin/user")
 	{

@@ -11,7 +11,7 @@ import (
 
 type JobGroup struct {
 	ID           int    `json:"id" db:"id" form:"id"`
-	Jobgroupid   int64  `gorm:"type:bigint;not null" json:"jobgroupid" validate:"required"`
+	Jobgroupid   int64  `gorm:"type:bigint;not null" json:"jobgroupid"`
 	Jobgroupname string `json:"jobgroupname" db:"jobgroupname" form:"jobgroupname"`
 	Label        string `json:"label" db:"label" form:"label"`
 }
@@ -29,8 +29,8 @@ func EditJobGroup(jobgroup JobGroup) (interface{}, error) {
 		return msg.InvalidParams, err
 	}
 	updateData := map[string]interface{}{
-		"Jobgroup": jobgroup.Jobgroupname,
-		"Label":    jobgroup.Label,
+		"Jobgroupname": jobgroup.Jobgroupname,
+		"Label":        jobgroup.Label,
 	}
 
 	err = db.Model(&jobgroup).Where("jobgroupid = ?", jobgroup.Jobgroupid).Updates(updateData).Error
@@ -71,4 +71,13 @@ func CheckJobGroup(jobgroupname string) (code int) {
 		return msg.ERROR_job_GET_INFO
 	}
 	return msg.SUCCSE
+}
+
+func SearchJobGroup(keyword string) ([]JobGroup, int) {
+	var jobgroup []JobGroup
+	db.Where("jobgroupname LIKE ? OR jobgroupid LIKE ? OR label LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%").Find(&jobgroup)
+	if len(jobgroup) > 0 {
+		return jobgroup, msg.SUCCSE
+	}
+	return nil, msg.ERROR_CMDB_GET_INFO
 }
