@@ -11,14 +11,15 @@ func AddJob(job models.Job) (data interface{}, err error) {
 		return nil, errors.New("所有字段都是必填的")
 	}
 	daojob := models.Job{
-		Jobid:            common.GenerateRandomNumber(),
-		Jobname:          job.Jobname,
-		Jobleve:          job.Jobleve,
-		Jobgroup:         job.Jobgroup,
-		Params:           job.Params,
-		Machineid_Script: job.Machineid_Script,
-		Type:             job.Type,
-		Label:            job.Label,
+		Jobid:       common.GenerateRandomNumber(),
+		Jobname:     job.Jobname,
+		Jobleve:     job.Jobleve,
+		Jobgroup:    job.Jobgroup,
+		Params:      job.Params,
+		Scriptname:  job.Scriptname,
+		Type:        job.Type,
+		Jobcmdbname: job.Jobcmdbname,
+		Label:       job.Label,
 	}
 
 	data, err = models.AddJob(daojob)
@@ -32,10 +33,12 @@ func EditJob(job models.Job) (data interface{}, err error) {
 		Jobleve:  job.Jobleve,
 		Jobgroup: job.Jobgroup,
 
-		Params:           job.Params,
-		Machineid_Script: job.Machineid_Script,
-		Type:             job.Type,
-		Label:            job.Label,
+		Params:      job.Params,
+		Scriptname:  job.Scriptname,
+		Type:        job.Type,
+		Jobcmdbname: job.Jobcmdbname,
+
+		Label: job.Label,
 	}
 	data, err = models.EditJob(daojob)
 	return data, err
