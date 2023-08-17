@@ -21,6 +21,13 @@
 
 - vue-admin-template                     [(后台前端)](http://panjiachen.github.io/vue-admin-template)
 
+#### 已实现的功能
+- webssh
+- cmdb
+- 用户管理
+- 批量命令或者脚本执行
+- 简单的工作流执行
+
 
 ## 部署方法
 
