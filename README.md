@@ -64,7 +64,19 @@ git clone https://github.com/qishu321/cmdb-ops-flow.git
 该项目使用Git进行版本管理。您可以在repository参看当前可用版本。
 
 ### 联系方式
+## 预览
 
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/cmdb.png?raw=true" style="zoom: 25%;" />
+
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/webssh2.png?raw=true" style="zoom:25%;" />
+
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C.png?raw=true" style="zoom:25%;" />
+
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/%E4%BD%9C%E4%B8%9A%E6%A8%A1%E6%9D%BF.png?raw=true" style="zoom:25%;" />
+
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/%E4%BD%9C%E4%B8%9A%E6%89%A7%E8%A1%8C%E7%BB%93%E6%9E%9C.png?raw=true" style="zoom: 25%;" />
+
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/%E8%84%9A%E6%9C%AC%E5%BA%93.png?raw=true" style="zoom: 25%;" />
 
 
 ### 版权说明
