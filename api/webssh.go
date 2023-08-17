@@ -33,7 +33,6 @@ var upgrader = websocket.Upgrader{
 //	AuthModel string `form:"authmodel" binding:"required"`
 //}
 
-// VisitorWebsocketServer https://github.com/widaT/webssh  websocket连接实现webssh
 func VisitorWebsocketServer(c *gin.Context) {
 	ip := c.Query("ip")
 	port := c.Query("port")
