@@ -81,7 +81,7 @@ git clone https://github.com/qishu321/cmdb-ops-flow.git
 
 ### 版权说明
 
-该项目签署了MIT 授权许可，详情请参阅 [LICENSE.txt](https://github.com/qiu-lzsnmb/QiuBlog/blob/master/LICENSE)
+该项目签署了MIT 授权许可
 
 ### 鸣谢
 
