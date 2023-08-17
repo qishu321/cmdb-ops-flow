@@ -41,6 +41,8 @@ func InitRouter() {
 		apiv1.POST("/cmdb/GetSearchCmdb", api.GetSearchCmdb)
 
 		apiv1.POST("/cmdb/ssh/command", api.SshCommand)
+		apiv1.POST("/cmdb/ssh/createFile", api.SshcreateFile)
+
 		apiv1.GET("/cmdb/ssh/webssh", api.VisitorWebsocketServer)
 
 		apiv1.POST("/script/addScript", api.AddScript)
@@ -52,6 +54,8 @@ func InitRouter() {
 		apiv1.POST("/job/getJob", api.GetJob)
 		apiv1.POST("/job/editJob", api.EditJob)
 		apiv1.POST("/job/delJob", api.DelJob)
+		apiv1.POST("/job/CheckJobgroup", api.CheckJobgroup)
+		apiv1.POST("/job/NewCustomAPI", api.NewCustomAPI)
 
 		apiv1.POST("/job/Group/addJobGroup", api.AddJobGroup)
 		apiv1.POST("/job/Group/GetJobGroup", api.GetJobGroup)

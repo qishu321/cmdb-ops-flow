@@ -7,9 +7,6 @@ import (
 	"strings"
 )
 
-//先新建jobgroup组，然后组里就都是相同的jobgroup,不可修改。
-//jobleve 优先级判断，判断jobgroup组里的所有数据，然后根据jobleve的从小往大去排序，创建的时候要进行判断，不能有相同的jobleve
-
 type Job struct {
 	ID      int   `json:"id" db:"id" form:"id"`
 	Jobid   int64 `gorm:"type:bigint;not null" json:"jobid" validate:"required"`
@@ -26,6 +23,20 @@ type Job struct {
 	Jobcmdbname string          `json:"jobcmdbname" db:"jobcmdbname" form:"jobcmdbname"`
 	Cmdbnames   []Cmdb          `gorm:"FOREIGNKEY:Cmdbname;ASSOCIATION_FOREIGNKEY:Jobcmdbname"`
 	Label       string          `json:"label" db:"label" form:"label"`
+}
+
+func CheckJobgroups(Jobgroup string) ([]Job, error) {
+	var jobs []Job
+
+	res := db.Where("Jobgroup = ?", Jobgroup).Order("jobleve").Preload("Jobgroups").Preload("Scriptnames").Find(&jobs)
+	for i, job := range jobs {
+		cmdbNames := strings.Split(job.Jobcmdbname, ",")
+		var cmdbList []Cmdb
+		db.Where("cmdbname IN (?)", cmdbNames).Find(&cmdbList)
+		jobs[i].Cmdbnames = cmdbList
+	}
+	return jobs, res.Error
+
 }
 
 func GetJobList(id int) ([]Job, error) {
@@ -64,10 +75,10 @@ func EditJob(Script Job) (interface{}, error) {
 		"Jobleve":     Script.Jobleve,
 		"Jobname":     Script.Jobname,
 		"Jobcmdbname": Script.Jobcmdbname,
-
-		"Params": Script.Params,
-		"Type":   Script.Type,
-		"Label":  Script.Label,
+		"Scriptname":  Script.Scriptname,
+		"Params":      Script.Params,
+		"Type":        Script.Type,
+		"Label":       Script.Label,
 	}
 
 	err = db.Model(&Script).Where("jobid = ?", Script.Jobid).Updates(updateData).Error
