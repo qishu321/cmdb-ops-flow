@@ -50,6 +50,17 @@ func InitRouter() {
 		apiv1.POST("/script/editScript", api.EditScript)
 		apiv1.POST("/script/delScript", api.DelScript)
 
+		apiv1.POST("/etcd/etcdGetall", api.EtcdGetall)
+		apiv1.POST("/etcd/getEtcd", api.GetEtcd)
+		apiv1.POST("/etcd/addEtcd", api.AddEtcd)
+
+		apiv1.POST("/etcd/editEtcd", api.EditEtcd)
+		apiv1.POST("/etcd/delEtcd", api.DelEtcd)
+
+		apiv1.POST("/etcd/getEtcdbak", api.GetEtcdbak)
+		apiv1.POST("/etcd/delEtcdbak", api.DelEtcdbak)
+		apiv1.POST("/etcd/addEtcdbak", api.AddEtcdbak)
+
 		apiv1.POST("/job/addJob", api.AddJob)
 		apiv1.POST("/job/getJob", api.GetJob)
 		apiv1.POST("/job/editJob", api.EditJob)
@@ -67,7 +78,6 @@ func InitRouter() {
 	adminuser := r.Group("/api/admin/user")
 	{
 		adminuser.POST("/login", api.Login)
-		adminuser.GET("/ssh/webssh", api.VisitorWebsocketServer)
 
 	}
 

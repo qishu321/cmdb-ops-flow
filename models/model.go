@@ -27,7 +27,7 @@ func InitDb() {
 	db.DB().SetMaxIdleConns(20)  //设置连接池，空闲
 	db.DB().SetMaxOpenConns(100) //打开
 	db.DB().SetConnMaxLifetime(time.Second * 30)
-	db.AutoMigrate(Cmdb{}, User{}, ScriptManager{}, Job{}, JobGroup{})
+	db.AutoMigrate(Cmdb{}, User{}, ScriptManager{}, Job{}, JobGroup{}, EtcdGroup{}, EtcdBak{})
 	db.LogMode(true)
 
 }
