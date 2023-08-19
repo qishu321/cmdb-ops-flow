@@ -113,3 +113,23 @@ func EtcdGetall(c *gin.Context) {
 
 	c.JSON(http.StatusOK, (&result.Result{}).Ok(200, list, msg.GetErrMsg(200)))
 }
+
+func Etcdrestore(c *gin.Context) {
+	var data struct {
+		Key           string `json:"key"`
+		Value         string `json:"value"`
+		EtcdEndpoints string `json:"etcdEndpoints"`
+	}
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(http.StatusOK, (&result.Result{}).Error(400, err.Error(), msg.GetErrMsg(msg.ERROR)))
+		return
+	}
+
+	list, err := service.EtcdPut(data.Key, data.Value, data.EtcdEndpoints)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, (&result.Result{}).Ok(200, list, msg.GetErrMsg(200)))
+}

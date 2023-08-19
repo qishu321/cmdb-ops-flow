@@ -51,6 +51,8 @@ func InitRouter() {
 		apiv1.POST("/script/delScript", api.DelScript)
 
 		apiv1.POST("/etcd/etcdGetall", api.EtcdGetall)
+		apiv1.POST("/etcd/Etcdrestore", api.Etcdrestore)
+
 		apiv1.POST("/etcd/getEtcd", api.GetEtcd)
 		apiv1.POST("/etcd/addEtcd", api.AddEtcd)
 

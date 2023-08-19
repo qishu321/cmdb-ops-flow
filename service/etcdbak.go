@@ -15,6 +15,7 @@ func AddEtcdbak(etcdbak models.EtcdBak) (data interface{}, err error) {
 	daoetcdbak := models.EtcdBak{
 		Etcdbakid:     common.GenerateRandomNumber(),
 		Etcdbakname:   etcdbak.Etcdbakname,
+		EtcdEndpoints: etcdbak.EtcdEndpoints,
 		EtcdGroupname: etcdbak.EtcdGroupname,
 		Key:           etcdbak.Key,
 		Value:         etcdbak.Value,

@@ -19,7 +19,7 @@ func AddEtcdGroup(etcdgroup EtcdGroup) (interface{}, error) {
 	return etcdgroup, err
 }
 func EditEtcdGroup(etcdgroup EtcdGroup) (interface{}, error) {
-	err := db.Select("id").Where("etcdGroupid = ?", etcdgroup.EtcdGroupid).First(&etcdgroup).Error
+	err := db.Select("id").Where("etcd_groupid = ?", etcdgroup.EtcdGroupid).First(&etcdgroup).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return msg.ERROR_SCRIPT_GET_WRONG, err
@@ -33,7 +33,7 @@ func EditEtcdGroup(etcdgroup EtcdGroup) (interface{}, error) {
 		"Label": etcdgroup.Label,
 	}
 
-	err = db.Model(&etcdgroup).Where("etcdGroupid = ?", etcdgroup.EtcdGroupid).Updates(updateData).Error
+	err = db.Model(&etcdgroup).Where("etcd_groupid = ?", etcdgroup.EtcdGroupid).Updates(updateData).Error
 	if err != nil {
 		return etcdgroup, err
 	}
@@ -42,9 +42,9 @@ func EditEtcdGroup(etcdgroup EtcdGroup) (interface{}, error) {
 }
 func DelEtcdGroup(name int64) (code int) {
 	var etcdgroup EtcdGroup
-	db.Select("id").Where("etcdGroupid = ?", name).First(&etcdgroup)
+	db.Select("id").Where("etcd_groupid = ?", name).First(&etcdgroup)
 	if etcdgroup.ID > 0 {
-		err = db.Where("etcdGroupid = ?", name).Delete(&etcdgroup).Error
+		err = db.Where("etcd_groupid = ?", name).Delete(&etcdgroup).Error
 		if err != nil {
 			return msg.InvalidParams
 		}
@@ -66,7 +66,7 @@ func GetEtcdGroupList(id int) ([]EtcdGroup, error) {
 }
 func CheckEtcdGroup(etcdGroupname string) (code int) {
 	var jobgroup EtcdGroup
-	db.Select("id").Where("etcdGroupname = ?", etcdGroupname).First(&jobgroup)
+	db.Select("id").Where("etcd_groupname = ?", etcdGroupname).First(&jobgroup)
 	if jobgroup.ID > 0 {
 		return msg.ERROR_job_GET_INFO
 	}

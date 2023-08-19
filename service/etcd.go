@@ -3,6 +3,7 @@ package service
 import (
 	"cmdb-ops-flow/models"
 	"cmdb-ops-flow/utils/common"
+	"context"
 	"errors"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"time"
@@ -58,4 +59,26 @@ func Etcdinit(etcd models.EtcdGroup) (*clientv3.Client, error) {
 
 	// 在函数结束之前返回 etcdClient
 	return EtcdClient, nil
+}
+
+func EtcdPut(key string, value string, etcdEndpoints string) (*clientv3.PutResponse, error) {
+	var err error
+	EtcdClient, err = clientv3.New(clientv3.Config{
+		Endpoints:   []string{etcdEndpoints},
+		DialTimeout: opTimeout,
+	})
+	if err != nil {
+		return nil, err // 返回错误
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), opTimeout)
+	defer cancel()
+
+	kvc := clientv3.NewKV(EtcdClient)
+
+	resp, err := kvc.Put(ctx, key, value)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
