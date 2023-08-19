@@ -27,6 +27,7 @@
 - 用户管理
 - 批量命令或者脚本执行
 - 简单的工作流执行
+- etcd的备份和回档
 
 
 ## 部署方法
@@ -74,6 +75,8 @@ git clone https://github.com/qishu321/cmdb-ops-flow.git
 ## 预览
 
 <img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/cmdb.png?raw=true" style="zoom: 25%;" />
+
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/etcdrestore.png?raw=true" style="zoom: 25%;" />
 
 <img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/webssh2.png?raw=true" style="zoom:25%;" />
 
