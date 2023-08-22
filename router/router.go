@@ -2,9 +2,12 @@ package router
 
 import (
 	"cmdb-ops-flow/api"
+	"cmdb-ops-flow/api/apis_k8s"
 	"cmdb-ops-flow/conf"
 	"cmdb-ops-flow/middleware"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+
 	"net/http"
 )
 
@@ -24,6 +27,12 @@ func InitRouter() {
 	r.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "PONG")
 	})
+	r.GET("/metrics", func(handler http.Handler) gin.HandlerFunc {
+		return func(c *gin.Context) {
+			handler.ServeHTTP(c.Writer, c.Request)
+		}
+	}(promhttp.Handler()))
+
 	apiv1 := r.Group("api")
 	apiv1.Use(middleware.Token())
 	{
@@ -70,6 +79,11 @@ func InitRouter() {
 		apiv1.POST("/job/CheckJobgroup", api.CheckJobgroup)
 		apiv1.POST("/job/NewCustomAPI", api.NewCustomAPI)
 
+		apiv1.POST("/kube/config/addconfig", api.AddKubeConfig)
+		apiv1.POST("/kube/config/getconfig", api.GetKubeConfig)
+		apiv1.POST("/kube/config/editconfig", api.EditKubeConfig)
+		apiv1.POST("/kube/config/delconfig", api.DelKubeConfig)
+
 		apiv1.POST("/job/Group/addJobGroup", api.AddJobGroup)
 		apiv1.POST("/job/Group/GetJobGroup", api.GetJobGroup)
 		apiv1.POST("/job/Group/EditJobGroup", api.EditJobGroup)
@@ -80,6 +94,19 @@ func InitRouter() {
 	adminuser := r.Group("/api/admin/user")
 	{
 		adminuser.POST("/login", api.Login)
+
+	}
+	api_k8s := r.Group("/api/k8s/")
+	{
+		api_k8s.POST("/kube/config/addconfig", api.AddKubeConfig)
+		api_k8s.POST("/kube/config/getconfig", api.GetKubeConfig)
+		api_k8s.POST("/kube/config/getallPods", apis_k8s.GetAllPods)
+		api_k8s.POST("/kube/config/getallNodes", apis_k8s.GetAllNodes)
+
+		api_k8s.POST("/kube/config/getallNamespace", apis_k8s.GetallNamespace)
+		api_k8s.POST("/kube/config/addNamespace", apis_k8s.AddNamespace)
+
+		api_k8s.POST("/kube/config/getVersion", apis_k8s.GetVersion)
 
 	}
 
