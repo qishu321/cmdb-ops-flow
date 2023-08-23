@@ -101,10 +101,21 @@ func InitRouter() {
 		api_k8s.POST("/kube/config/addconfig", api.AddKubeConfig)
 		api_k8s.POST("/kube/config/getconfig", api.GetKubeConfig)
 		api_k8s.POST("/kube/config/getallPods", apis_k8s.GetAllPods)
+		api_k8s.POST("/kube/config/getPods", apis_k8s.GetPods)
+
 		api_k8s.POST("/kube/config/getallNodes", apis_k8s.GetAllNodes)
+
+		api_k8s.POST("/kube/config/getDeployment", apis_k8s.GetDeployment)
 
 		api_k8s.POST("/kube/config/getallNamespace", apis_k8s.GetallNamespace)
 		api_k8s.POST("/kube/config/addNamespace", apis_k8s.AddNamespace)
+		api_k8s.POST("/kube/config/editNamespace", apis_k8s.EditNamespace)
+		api_k8s.POST("/kube/config/delNamespace", apis_k8s.DelNamespace)
+
+		api_k8s.POST("/kube/config/getallSvc", apis_k8s.GetallSvc)
+		api_k8s.POST("/kube/config/delSvc", apis_k8s.DelSvc)
+		api_k8s.POST("/kube/config/addSvc", apis_k8s.AddSvc)
+		api_k8s.POST("/kube/config/editSvc", apis_k8s.EditSvc)
 
 		api_k8s.POST("/kube/config/getVersion", apis_k8s.GetVersion)
 

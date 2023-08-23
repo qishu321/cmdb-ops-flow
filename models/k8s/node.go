@@ -8,6 +8,9 @@ import (
 type Labels map[string]string
 type Annotations map[string]string
 
+//type LimitRange map[string]string
+//type ResourceQuota map[string]string
+
 type Node struct {
 	Name                    string      `json:"name"`
 	Status                  string      `json:"status"`

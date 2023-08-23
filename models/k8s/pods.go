@@ -1,8 +1,12 @@
 package k8s
 
-import "time"
+import (
+	"time"
+)
 
 type Pod struct {
+	ID int `json:"id"`
+
 	Name              string      `json:"name"`
 	PodIp             string      `json:"pod_ip"`
 	Status            string      `json:"status"`
