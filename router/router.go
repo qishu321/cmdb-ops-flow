@@ -24,6 +24,8 @@ func InitRouter() {
 		WriteTimeout:   conf.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,
 	}
+	//r.Use(middleware.Jaeger())
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "PONG")
 	})
@@ -79,10 +81,10 @@ func InitRouter() {
 		apiv1.POST("/job/CheckJobgroup", api.CheckJobgroup)
 		apiv1.POST("/job/NewCustomAPI", api.NewCustomAPI)
 
-		apiv1.POST("/kube/config/addconfig", api.AddKubeConfig)
-		apiv1.POST("/kube/config/getconfig", api.GetKubeConfig)
-		apiv1.POST("/kube/config/editconfig", api.EditKubeConfig)
-		apiv1.POST("/kube/config/delconfig", api.DelKubeConfig)
+		//apiv1.POST("/kube/config/addconfig", api.AddKubeConfig)
+		//apiv1.POST("/kube/config/getconfig", api.GetKubeConfig)
+		//apiv1.POST("/kube/config/editconfig", api.EditKubeConfig)
+		//apiv1.POST("/kube/config/delconfig", api.DelKubeConfig)
 
 		apiv1.POST("/job/Group/addJobGroup", api.AddJobGroup)
 		apiv1.POST("/job/Group/GetJobGroup", api.GetJobGroup)
@@ -96,28 +98,33 @@ func InitRouter() {
 		adminuser.POST("/login", api.Login)
 
 	}
+
 	api_k8s := r.Group("/api/k8s/")
+	api_k8s.Use(middleware.Token())
 	{
 		api_k8s.POST("/kube/config/addconfig", api.AddKubeConfig)
 		api_k8s.POST("/kube/config/getconfig", api.GetKubeConfig)
-		api_k8s.POST("/kube/config/getallPods", apis_k8s.GetAllPods)
-		api_k8s.POST("/kube/config/getPods", apis_k8s.GetPods)
+		api_k8s.POST("/kube/config/editconfig", api.EditKubeConfig)
+		api_k8s.POST("/kube/config/delconfig", api.DelKubeConfig)
 
-		api_k8s.POST("/kube/config/getallNodes", apis_k8s.GetAllNodes)
+		api_k8s.POST("/kube/pods/getallPods", apis_k8s.GetAllPods)
+		api_k8s.POST("/kube/pods/getPods", apis_k8s.GetPods)
 
-		api_k8s.POST("/kube/config/getDeployment", apis_k8s.GetDeployment)
+		api_k8s.POST("/kube/nodes/getVersion", apis_k8s.GetVersion)
+		api_k8s.POST("/kube/nodes/getNodeMetrics", apis_k8s.GetNodeMetrics)
+		api_k8s.POST("/kube/nodes/getallNodes", apis_k8s.GetAllNodes)
 
-		api_k8s.POST("/kube/config/getallNamespace", apis_k8s.GetallNamespace)
-		api_k8s.POST("/kube/config/addNamespace", apis_k8s.AddNamespace)
-		api_k8s.POST("/kube/config/editNamespace", apis_k8s.EditNamespace)
-		api_k8s.POST("/kube/config/delNamespace", apis_k8s.DelNamespace)
+		api_k8s.POST("/kube/deploy/getDeployment", apis_k8s.GetDeployment)
 
-		api_k8s.POST("/kube/config/getallSvc", apis_k8s.GetallSvc)
-		api_k8s.POST("/kube/config/delSvc", apis_k8s.DelSvc)
-		api_k8s.POST("/kube/config/addSvc", apis_k8s.AddSvc)
-		api_k8s.POST("/kube/config/editSvc", apis_k8s.EditSvc)
+		api_k8s.POST("/kube/ns/getallNamespace", apis_k8s.GetallNamespace)
+		api_k8s.POST("/kube/ns/addNamespace", apis_k8s.AddNamespace)
+		api_k8s.POST("/kube/ns/editNamespace", apis_k8s.EditNamespace)
+		api_k8s.POST("/kube/ns/delNamespace", apis_k8s.DelNamespace)
 
-		api_k8s.POST("/kube/config/getVersion", apis_k8s.GetVersion)
+		api_k8s.POST("/kube/svc/getallSvc", apis_k8s.GetallSvc)
+		api_k8s.POST("/kube/svc/delSvc", apis_k8s.DelSvc)
+		api_k8s.POST("/kube/svc/addSvc", apis_k8s.AddSvc)
+		api_k8s.POST("/kube/svc/editSvc", apis_k8s.EditSvc)
 
 	}
 

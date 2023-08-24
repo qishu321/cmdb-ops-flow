@@ -3,14 +3,14 @@ package service_k8s
 import (
 	"cmdb-ops-flow/models/k8s"
 	"context"
+	"fmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"log"
 )
 
 func GetallPods(id int) ([]k8s.Pod, error) {
 	clientSet, err := k8s.GetKubeConfig(id)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	podList, _ := clientSet.CoreV1().Pods("").List(context.Background(), metav1.ListOptions{})
 
@@ -33,7 +33,7 @@ func GetallPods(id int) ([]k8s.Pod, error) {
 func GetPods(id int, ns string) ([]k8s.Pod, error) {
 	clientSet, err := k8s.GetKubeConfig(id)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	podList, _ := clientSet.CoreV1().Pods(ns).List(context.Background(), metav1.ListOptions{})
 

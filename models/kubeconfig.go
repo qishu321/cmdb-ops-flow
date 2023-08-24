@@ -68,7 +68,7 @@ func EditKubeConfig(config KubeConfig) (interface{}, error) {
 }
 func DelKubeConfig(name int64) (code int) {
 	var config KubeConfig
-	db.Select("id").Where("kubeconfigname = ?", name).First(&config)
+	db.Select("id").Where("kubeconfigid = ?", name).First(&config)
 	if config.ID > 0 {
 		err = db.Where("kubeconfigid = ?", name).Delete(&config).Error
 		if err != nil {

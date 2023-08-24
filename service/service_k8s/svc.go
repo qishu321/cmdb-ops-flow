@@ -8,7 +8,6 @@ import (
 	"strconv"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"log"
 )
 
 func Getsvs(id int, ns string) ([]k8s.Svc, error) {
@@ -104,14 +103,14 @@ func EditSvc(id int, updatedSvc k8s.Svc) (*v1.Service, error) {
 func AddSvc(id int, data k8s.Svc) (*v1.Service, error) {
 	clientSet, err := k8s.GetKubeConfig(id)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	var servicePorts []v1.ServicePort
 
 	for _, portStr := range data.Ports {
 		portNumber, err := strconv.Atoi(portStr)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
 			// 处理端口转换错误
 		}
 
@@ -154,7 +153,7 @@ func AddSvc(id int, data k8s.Svc) (*v1.Service, error) {
 func Delsvs(id int, nsName string, svcName string) (code int, err error) {
 	clientSet, err := k8s.GetKubeConfig(id)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	err = clientSet.CoreV1().Services(nsName).Delete(context.Background(), svcName, metav1.DeleteOptions{})
 	if err != nil {

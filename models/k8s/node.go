@@ -24,3 +24,14 @@ type Node struct {
 	CreationTimestamp       time.Time   `json:"creation_timestamp"`
 	ContainerRuntimeVersion string      `json:"container_runtime_version"`
 }
+
+type NodeMetrics struct {
+	ID           int     `json:"id"`
+	Name         string  `json:"name"`
+	UsedCpu      float64 `json:"used_cpu"`
+	TotalCpu     float64 `json:"total_cpu"`
+	UsedMemory   float64 `json:"used_memory"`
+	TotalMemory  float64 `json:"total_memory"`
+	ReadyNodeNum int     `json:"readyNodeNum"`
+	TotalNodeNum int     `json:"totalNodeNum"`
+}

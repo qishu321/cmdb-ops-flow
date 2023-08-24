@@ -3,10 +3,10 @@ package service_k8s
 import (
 	"cmdb-ops-flow/models/k8s"
 	"context"
+	"fmt"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/klog"
-	"log"
 )
 
 var ctx = context.Background()
@@ -14,7 +14,7 @@ var ctx = context.Background()
 func GetNamespace(id int) ([]v1.Namespace, error) {
 	clientSet, err := k8s.GetKubeConfig(id)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	namespaceList, err := clientSet.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
 	if err != nil {
@@ -27,7 +27,7 @@ func GetNamespace(id int) ([]v1.Namespace, error) {
 //	func GetNamespaceSub(id int,nsName string) ([]k8s.NameSpace, error) {
 //		clientSet, err := k8s.GetKubeConfig(id)
 //		if err != nil {
-//			log.Fatal(err)
+//			fmt.Println(err)
 //		}
 //		namespacesub,err := clientSet.CoreV1().Namespaces().Get(ctx,nsName,metav1.GetOptions{})
 //
@@ -40,7 +40,7 @@ func GetNamespace(id int) ([]v1.Namespace, error) {
 func AddNamespace(id int, ns k8s.NameSpace) (*v1.Namespace, error) {
 	clientSet, err := k8s.GetKubeConfig(id)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	newNamespace, err := clientSet.CoreV1().Namespaces().Create(ctx, &v1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
@@ -59,7 +59,7 @@ func AddNamespace(id int, ns k8s.NameSpace) (*v1.Namespace, error) {
 func EditNamespace(id int, ns k8s.NameSpace) (*v1.Namespace, error) {
 	clientSet, err := k8s.GetKubeConfig(id)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	newNamespace, err := clientSet.CoreV1().Namespaces().Update(ctx, &v1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
