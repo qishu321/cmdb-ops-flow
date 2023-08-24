@@ -28,7 +28,13 @@
 - 批量命令或者脚本执行
 - 简单的工作流执行
 - etcd的备份和回档
-
+- k8s的多集群管理
+```bash
+##k8s的多集群管理
+- 目前实现的功能：
+kubeconfig的管理，存储到数据库里，可以任意切换
+然后根据这个实现多集群的管理
+```
 
 ## 部署方法
 
@@ -73,6 +79,10 @@ git clone https://github.com/qishu321/cmdb-ops-flow.git
 
 ### 联系方式
 ## 预览
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/kube-config.png?raw=true" style="zoom: 25%;" />
+
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/kube-dashboard.png?raw=true" style="zoom: 25%;" />
+
 
 <img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/cmdb.png?raw=true" style="zoom: 25%;" />
 
