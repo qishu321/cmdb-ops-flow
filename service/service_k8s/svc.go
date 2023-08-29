@@ -30,20 +30,65 @@ func Getsvs(id int, ns string) ([]k8s.Svc, error) {
 			prots = append(prots, portStr)
 		}
 
-		svc := k8s.Svc{
-			ID:          id,
-			Name:        service.Name,
-			Namespace:   service.Namespace,
-			Type:        string(service.Spec.Type),
-			ClusterIp:   service.Spec.ClusterIP,
-			Ports:       prots,
-			Selector:    service.Spec.Selector,
-			Labels:      service.Labels,
-			Annotations: service.Annotations,
-			NodePort:    service.Spec.Ports[0].NodePort,         // Assuming there's at least one port defined
-			Protocol:    string(service.Spec.Ports[0].Protocol), // Assuming there's at least one port defined
+		if service.Spec.SessionAffinity == "ClientIP" {
+			svc := k8s.Svc{
+				ID:              id,
+				Name:            service.Name,
+				Namespace:       service.Namespace,
+				Type:            string(service.Spec.Type),
+				ClusterIp:       service.Spec.ClusterIP,
+				Ports:           prots,
+				Selector:        service.Spec.Selector,
+				Labels:          service.Labels,
+				Annotations:     service.Annotations,
+				NodePort:        service.Spec.Ports[0].NodePort, // Assuming there's at least one port defined
+				Protocol:        string(service.Spec.Ports[0].Protocol),
+				SessionAffinity: string(service.Spec.SessionAffinity),
+				SessionAffinityConfig: k8s.SessionAffinityConfig{
+					ClientIP: k8s.ClientIP{
+						TimeoutSeconds: *service.Spec.SessionAffinityConfig.ClientIP.TimeoutSeconds,
+					},
+				},
+			}
+			svcs = append(svcs, svc)
+		} else {
+			svc := k8s.Svc{
+				ID:              id,
+				Name:            service.Name,
+				Namespace:       service.Namespace,
+				Type:            string(service.Spec.Type),
+				ClusterIp:       service.Spec.ClusterIP,
+				Ports:           prots,
+				Selector:        service.Spec.Selector,
+				Labels:          service.Labels,
+				Annotations:     service.Annotations,
+				NodePort:        service.Spec.Ports[0].NodePort, // Assuming there's at least one port defined
+				Protocol:        string(service.Spec.Ports[0].Protocol),
+				SessionAffinity: string(service.Spec.SessionAffinity),
+			}
+			//svc := k8s.Svc{
+			//	ID:          id,
+			//	Name:        service.Name,
+			//	Namespace:   service.Namespace,
+			//	Type:        string(service.Spec.Type),
+			//	ClusterIp:   service.Spec.ClusterIP,
+			//	Ports:       prots,
+			//	Selector:    service.Spec.Selector,
+			//	Labels:      service.Labels,
+			//	Annotations: service.Annotations,
+			//	NodePort:    service.Spec.Ports[0].NodePort,         // Assuming there's at least one port defined
+			//	Protocol:    string(service.Spec.Ports[0].Protocol),
+			//	SessionAffinity: string(service.Spec.SessionAffinity),
+			//	SessionAffinityConfig: k8s.SessionAffinityConfig{
+			//		ClientIP:k8s.ClientIP{
+			//			TimeoutSeconds: *service.Spec.SessionAffinityConfig.ClientIP.TimeoutSeconds,
+			//		},
+			//	},
+			//
+			//
+			//}
+			svcs = append(svcs, svc)
 		}
-		svcs = append(svcs, svc)
 	}
 
 	return svcs, nil
@@ -89,6 +134,13 @@ func EditSvc(id int, updatedSvc k8s.Svc) (*v1.Service, error) {
 	existingSvc.Spec.Ports = updatedServicePorts
 	existingSvc.Spec.Ports[0].NodePort = updatedSvc.NodePort
 
+	existingSvc.Spec.SessionAffinity = v1.ServiceAffinity(updatedSvc.SessionAffinity)
+	existingSvc.Spec.SessionAffinityConfig = &v1.SessionAffinityConfig{
+		ClientIP: &v1.ClientIPConfig{
+			TimeoutSeconds: &updatedSvc.SessionAffinityConfig.ClientIP.TimeoutSeconds,
+		},
+	}
+
 	// 其他字段根据你的需求进行更新
 
 	// 更新 Service 资源
@@ -128,6 +180,11 @@ func AddSvc(id int, data k8s.Svc) (*v1.Service, error) {
 
 		servicePorts = append(servicePorts, servicePort)
 	}
+	//sessionAffinityConfig := &k8s.SessionAffinityConfig{
+	//	ClientIP: k8s.ClientIP{
+	//		TimeoutSeconds: data.SessionAffinityConfig.ClientIP.TimeoutSeconds,
+	//	},
+	//}
 
 	serviceType := v1.ServiceTypeClusterIP
 	if data.Type == "NodePort" {
@@ -140,11 +197,18 @@ func AddSvc(id int, data k8s.Svc) (*v1.Service, error) {
 			Labels: data.Labels,
 		},
 		Spec: v1.ServiceSpec{
-			Selector: data.Selector,
-			Type:     serviceType,
-			Ports:    servicePorts,
+			Selector:        data.Selector,
+			Type:            serviceType,
+			Ports:           servicePorts,
+			SessionAffinity: v1.ServiceAffinity(data.SessionAffinity),
+			SessionAffinityConfig: &v1.SessionAffinityConfig{
+				ClientIP: &v1.ClientIPConfig{
+					TimeoutSeconds: &data.SessionAffinityConfig.ClientIP.TimeoutSeconds,
+				},
+			},
 		},
 	}
+
 	serviceList, err := clientSet.CoreV1().Services(data.Namespace).Create(context.TODO(), service, metav1.CreateOptions{})
 
 	return serviceList, err

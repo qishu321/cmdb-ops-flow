@@ -5,6 +5,7 @@ import (
 	"cmdb-ops-flow/service/service_k8s"
 	"cmdb-ops-flow/utils/msg"
 	"cmdb-ops-flow/utils/result"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -43,6 +44,7 @@ func EditSvc(c *gin.Context) {
 
 	var data k8s.Svc
 	if err := c.ShouldBindJSON(&data); err != nil {
+		fmt.Println(err)
 		c.JSON(http.StatusOK, (&result.Result{}).Error(5001, err.Error(), msg.GetErrMsg(msg.ERROR)))
 		return
 	}

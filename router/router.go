@@ -96,6 +96,8 @@ func InitRouter() {
 	adminuser := r.Group("/api/admin/user")
 	{
 		adminuser.POST("/login", api.Login)
+		adminuser.GET("/ssh/webssh", api.VisitorWebsocketServer)
+		adminuser.GET("/kube/pods/SshPod", apis_k8s.SshPod)
 
 	}
 
@@ -109,6 +111,7 @@ func InitRouter() {
 
 		api_k8s.POST("/kube/pods/getallPods", apis_k8s.GetAllPods)
 		api_k8s.POST("/kube/pods/getPods", apis_k8s.GetPods)
+		api_k8s.GET("/kube/pods/SshPod", apis_k8s.SshPod)
 
 		api_k8s.POST("/kube/nodes/getVersion", apis_k8s.GetVersion)
 		api_k8s.POST("/kube/nodes/getNodeMetrics", apis_k8s.GetNodeMetrics)
