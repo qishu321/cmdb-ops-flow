@@ -9,7 +9,9 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"gopkg.in/yaml.v3"
 	"io"
+	"k8s.io/apimachinery/pkg/runtime"
 	"log"
 	"net/http"
 )
@@ -95,6 +97,39 @@ func GetPods(c *gin.Context) {
 	}
 	code := msg.SUCCSE
 	c.JSON(http.StatusOK, (&result.Result{}).Ok(code, list, msg.GetErrMsg(code)))
+}
+func GetPodsYaml(c *gin.Context) {
+	var data k8s.Pod
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(http.StatusOK, (&result.Result{}).Error(400, err.Error(), msg.GetErrMsg(msg.ERROR)))
+		return
+	}
+	pod, err := service_k8s.GetPodsYaml(data.ID, data.Namespace, data.Name)
+	if err != nil {
+		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, err.Error(), msg.GetErrMsg(msg.ERROR)))
+		return
+	}
+	podMap, err := runtime.DefaultUnstructuredConverter.ToUnstructured(pod)
+	if err != nil {
+		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, err.Error(), msg.GetErrMsg(msg.ERROR)))
+		return
+	}
+	podYAMLBytes, err := yaml.Marshal(podMap)
+	if err != nil {
+		c.JSON(http.StatusOK, (&result.Result{}).Error(msg.ERROR, err.Error(), msg.GetErrMsg(msg.ERROR)))
+		return
+	}
+
+	podYaml := string(podYAMLBytes)
+
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Failed to convert Pod to YAML"})
+		return
+	}
+
+	c.JSON(http.StatusOK, (&result.Result{}).Ok(200, podYaml, msg.GetErrMsg(200)))
+
+	//c.String(http.StatusOK,  podYaml)
 }
 
 //var (

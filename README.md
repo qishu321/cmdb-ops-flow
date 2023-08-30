@@ -81,6 +81,8 @@ git clone https://github.com/qishu321/cmdb-ops-flow.git
 ## 预览
 <img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/kube-config.png?raw=true" style="zoom: 25%;" />
 
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/getpodyaml.png?raw=true" style="zoom: 25%;" />
+
 <img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/webssh_pod.png?raw=true" style="zoom: 25%;" />
 
 <img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/pod_log.png?raw=true" style="zoom: 25%;" />

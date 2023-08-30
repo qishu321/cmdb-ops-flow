@@ -113,6 +113,7 @@ func InitRouter() {
 		api_k8s.POST("/kube/pods/getallPods", apis_k8s.GetAllPods)
 		api_k8s.POST("/kube/pods/getPods", apis_k8s.GetPods)
 		api_k8s.POST("/kube/pods/getPodLogs", apis_k8s.GetPodLogs)
+		api_k8s.POST("/kube/pods/GetPodsYaml", apis_k8s.GetPodsYaml)
 
 		api_k8s.GET("/kube/pods/SshPod", apis_k8s.SshPod)
 

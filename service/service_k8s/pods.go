@@ -7,6 +7,7 @@ import (
 	"io"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"log"
 )
 
 func GetallPods(id int) ([]k8s.Pod, error) {
@@ -54,6 +55,33 @@ func GetPods(id int, ns string) ([]k8s.Pod, error) {
 
 	return pods, err
 }
+
+func GetPodsYaml(id int, ns string, podName string) (*v1.Pod, error) {
+	clientSet, err := k8s.GetKubeConfig(id)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	pod, err := clientSet.CoreV1().Pods(ns).Get(context.Background(), podName, metav1.GetOptions{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	return pod, err
+
+}
+
+//func GetPodsYaml(id int, ns string, podName string) (*v1.Pod, error) {
+//	clientSet, err := k8s.GetKubeConfig(id)
+//	if err != nil {
+//		fmt.Println(err)
+//	}
+//	podYaml, err:= clientSet.CoreV1().Pods(ns).Get(context.Background(), podName,metav1.GetOptions{})
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//	return podYaml,err
+//
+//}
 
 //func GetPodLogs(id int, ns string) ([]k8s.Pod, error) {
 //	clientSet, err := k8s.GetKubeConfig(id)
