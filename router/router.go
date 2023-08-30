@@ -98,6 +98,7 @@ func InitRouter() {
 		adminuser.POST("/login", api.Login)
 		adminuser.GET("/ssh/webssh", api.VisitorWebsocketServer)
 		adminuser.GET("/kube/pods/SshPod", apis_k8s.SshPod)
+		adminuser.GET("/kube/pods/getPodLogs", apis_k8s.GetPodLogs)
 
 	}
 
@@ -111,6 +112,8 @@ func InitRouter() {
 
 		api_k8s.POST("/kube/pods/getallPods", apis_k8s.GetAllPods)
 		api_k8s.POST("/kube/pods/getPods", apis_k8s.GetPods)
+		api_k8s.POST("/kube/pods/getPodLogs", apis_k8s.GetPodLogs)
+
 		api_k8s.GET("/kube/pods/SshPod", apis_k8s.SshPod)
 
 		api_k8s.POST("/kube/nodes/getVersion", apis_k8s.GetVersion)

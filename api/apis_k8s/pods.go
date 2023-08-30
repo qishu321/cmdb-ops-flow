@@ -9,8 +9,62 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"io"
+	"log"
 	"net/http"
 )
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+const logBufferSize = 1024 // 适当设置缓冲区大小
+
+func GetPodLogs(c *gin.Context) {
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		log.Printf("WebSocket 连接失败：%v", err)
+		return
+	}
+	defer conn.Close()
+
+	var data k8s.Pod
+	if err := c.ShouldBindQuery(&data); err != nil {
+		log.Printf("请求数据绑定失败：%v", err)
+		return
+	}
+	fmt.Println("123", data)
+	logsStream, err := service_k8s.GetPodLogs(data.ID, data.Namespace, data.Name, data.ContainerName)
+	if err != nil {
+		log.Printf("获取日志时出错：%v", err)
+		return
+	}
+
+	logBuffer := make([]byte, logBufferSize)
+	for {
+		n, err := logsStream.Read(logBuffer)
+		if err != nil && err != io.EOF {
+			log.Printf("读取日志时出错：%v", err)
+			return
+		}
+
+		if n > 0 {
+			logData := logBuffer[:n]
+			if err := conn.WriteMessage(websocket.TextMessage, logData); err != nil {
+				log.Printf("WebSocket 发送消息失败：%v", err)
+				return
+			}
+		}
+
+		if err == io.EOF {
+			break
+		}
+	}
+}
 
 func GetAllPods(c *gin.Context) {
 	var data struct {
@@ -42,6 +96,35 @@ func GetPods(c *gin.Context) {
 	code := msg.SUCCSE
 	c.JSON(http.StatusOK, (&result.Result{}).Ok(code, list, msg.GetErrMsg(code)))
 }
+
+//var (
+//	logBufferSize = 10 * 1024 * 1024 // 10M
+//)
+
+//func GetPodLogs(c *gin.Context) {
+//	var data k8s.Pod
+//	if err := c.ShouldBindJSON(&data); err != nil {
+//		c.JSON(http.StatusBadRequest, (&result.Result{}).Error(http.StatusBadRequest, err.Error(), msg.GetErrMsg(msg.ERROR)))
+//		return
+//	}
+//
+//	logsStream, err := service_k8s.GetPodLogs(data.ID, data.Namespace, data.Name, data.ContainerName)
+//	if err != nil {
+//		log.Printf("Error getting logs: %v", err)
+//
+//		c.JSON(http.StatusInternalServerError, (&result.Result{}).Error(http.StatusInternalServerError, "Error getting logs", msg.GetErrMsg(msg.ERROR)))
+//		return
+//	}
+//
+//	logBuffer := make([]byte, logBufferSize)
+//	n, err := logsStream.Read(logBuffer)
+//	if err != nil && err != io.EOF {
+//		c.JSON(http.StatusInternalServerError, (&result.Result{}).Error(http.StatusInternalServerError, "Error reading logs", msg.GetErrMsg(msg.ERROR)))
+//		return
+//	}
+//	c.JSON(http.StatusOK, (&result.Result{}).Ok(200, string(logBuffer[:n]), msg.GetErrMsg(200)))
+//
+//}
 
 type query struct {
 	Id            int    `form:"id" binding:"required"`
