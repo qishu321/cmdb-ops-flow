@@ -29,11 +29,13 @@
 - 简单的工作流执行
 - etcd的备份和回档
 - k8s的多集群管理
+- 基于go实现Prometheus企微机器人告警
 ```bash
 ##k8s的多集群管理
 - 目前实现的功能：
 kubeconfig的管理，存储到数据库里，然后根据这个实现多集群的管理，多集群可以任意切换
-web创建namespace、svc；web查看pod的日志、webssh登录pod、web获取集群监控汇总详情等
+web创建namespace、svc；web查看pod的日志、web查看pod的yaml、webssh登录pod、web获取集群监控汇总详情等
+Prometheus企微机器人告警
 ```
 
 ## 部署方法
@@ -80,6 +82,8 @@ git clone https://github.com/qishu321/cmdb-ops-flow.git
 ### 联系方式
 ## 预览
 <img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/kube-config.png?raw=true" style="zoom: 25%;" />
+
+<img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/wx-alert.png?raw=true" style="zoom: 25%;" />
 
 <img src="https://github.com/qishu321/cmdb-ops-flow/blob/main/doc/getpodyaml.png?raw=true" style="zoom: 25%;" />
 

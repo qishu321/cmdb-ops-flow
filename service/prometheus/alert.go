@@ -1,7 +1,8 @@
-package main
+package prometheus
 
 import (
 	"bytes"
+	"cmdb-ops-flow/models/prometheus"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -9,40 +10,17 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
-type Message struct {
-	MsgType  string `json:"msgtype"`
-	Markdown struct {
-		Content string `json:"content"`
-	} `json:"markdown"`
-}
-
-type Alert struct {
-	Labels      map[string]string `json:"labels"`
-	Annotations map[string]string `json:"annotations"`
-	StartsAt    time.Time         `json:"startsAt"`
-	EndsAt      time.Time         `json:"endsAt"`
-}
-
-type Notification struct {
-	Version           string            `json:"version"`
-	GroupKey          string            `json:"groupKey"`
-	Status            string            `json:"status"`
-	Receiver          string            `json:"receiver"`
-	GroupLabels       map[string]string `json:"groupLabels"`
-	CommonLabels      map[string]string `json:"commonLabels"`
-	CommonAnnotations map[string]string `json:"commonAnnotations"`
-	ExternalURL       string            `json:"externalURL"`
-	Alerts            []Alert           `json:"alerts"`
-}
-
-var defaultRobot = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key="
-
-func SendMessage(notification Notification, defaultRobot string) {
+func SendMessage(notification prometheus.Notification, defaultRobot string) string {
 	var buffer bytes.Buffer
+
+	// 获取本地时区
+	loc, err := time.LoadLocation("Local")
+	if err != nil {
+		log.Println("LoadLocation failed,", err)
+		loc = time.UTC // 如果加载本地时区失败，则默认使用UTC时区
+	}
 
 	// 构建告警消息
 	for _, alert := range notification.Alerts {
@@ -57,11 +35,18 @@ func SendMessage(notification Notification, defaultRobot string) {
 		buffer.WriteString(fmt.Sprintf("\n>告警类型: %s\n", alert.Labels["alertname"]))
 		buffer.WriteString(fmt.Sprintf("\n>故障主机: %s\n", alert.Labels["instance"]))
 		buffer.WriteString(fmt.Sprintf("\n>告警详情: %s\n", alert.Annotations["description"]))
-		buffer.WriteString(fmt.Sprintf("\n>触发时间: %s\n", alert.StartsAt.Format("2006-01-02 15:04:05")))
+
+		// 使用指定时区格式化触发时间
+		buffer.WriteString(fmt.Sprintf("\n>触发时间: %s\n", alert.StartsAt.In(loc).Format("2006-01-02 15:04:05")))
+		// 如果告警已恢复，同时显示恢复时间
+		if notification.Status == "resolved" {
+			buffer.WriteString(fmt.Sprintf("\n>恢复时间: %s\n", alert.EndsAt.In(loc).Format("2006-01-02 15:04:05")))
+		}
 		buffer.WriteString(fmt.Sprintf(`<@%s>`, "guomengfei"))
+
 	}
 
-	var m Message
+	var m prometheus.Message
 	m.MsgType = "markdown"
 
 	if notification.Status == "resolved" {
@@ -75,7 +60,7 @@ func SendMessage(notification Notification, defaultRobot string) {
 	jsons, err := json.Marshal(m)
 	if err != nil {
 		log.Println("SendMessage Marshal failed,", err)
-		return
+		return m.MsgType
 	}
 	resp := string(jsons)
 	client := &http.Client{}
@@ -83,35 +68,20 @@ func SendMessage(notification Notification, defaultRobot string) {
 	req, err := http.NewRequest("POST", defaultRobot, strings.NewReader(resp))
 	if err != nil {
 		log.Println("SendMessage http NewRequest failed,", err)
-		return
+		return resp
 	}
 	req.Header.Set("Content-Type", "application/json")
 	r, err := client.Do(req)
 	if err != nil {
 		log.Println("SendMessage client Do failed", err)
-		return
+		return resp
 	}
 	defer r.Body.Close()
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Println("SendMessage ReadAll Body failed", err)
-		return
+		return resp
 	}
 	log.Println("SendMessage success,body:", string(body))
-}
-
-func Alter(c *gin.Context) {
-	var notification Notification
-	err := c.BindJSON(&notification)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	SendMessage(notification, defaultRobot)
-}
-
-func main() {
-	t := gin.Default()
-	t.POST("/Alter", Alter)
-	t.Run(":8090")
+	return resp
 }

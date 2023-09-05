@@ -14,7 +14,7 @@ var (
 
 	Md5Key     string
 	Encryptkey string
-
+	Wxhookkey  string
 	DbHost     string
 	DbPort     string
 	DbUser     string
@@ -40,6 +40,7 @@ func LoadServer(file *ini.File) {
 func LoadApp(file *ini.File) {
 	Md5Key = file.Section("app").Key("Md5Key").String()
 	Encryptkey = file.Section("app").Key("Encryptkey").String()
+	Wxhookkey = file.Section("app").Key("Wxhookkey").String()
 
 }
 

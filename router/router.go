@@ -2,6 +2,7 @@ package router
 
 import (
 	"cmdb-ops-flow/api"
+	"cmdb-ops-flow/api/api_prom"
 	"cmdb-ops-flow/api/apis_k8s"
 	"cmdb-ops-flow/conf"
 	"cmdb-ops-flow/middleware"
@@ -80,6 +81,7 @@ func InitRouter() {
 		apiv1.POST("/job/delJob", api.DelJob)
 		apiv1.POST("/job/CheckJobgroup", api.CheckJobgroup)
 		apiv1.POST("/job/NewCustomAPI", api.NewCustomAPI)
+		apiv1.POST("/job/flowAPI", api.FlowAPI)
 
 		//apiv1.POST("/kube/config/addconfig", api.AddKubeConfig)
 		//apiv1.POST("/kube/config/getconfig", api.GetKubeConfig)
@@ -96,6 +98,8 @@ func InitRouter() {
 	adminuser := r.Group("/api/admin/user")
 	{
 		adminuser.POST("/login", api.Login)
+		adminuser.POST("/alter", api_prom.Alter)
+
 		adminuser.GET("/ssh/webssh", api.VisitorWebsocketServer)
 		adminuser.GET("/kube/pods/SshPod", apis_k8s.SshPod)
 		adminuser.GET("/kube/pods/getPodLogs", apis_k8s.GetPodLogs)
