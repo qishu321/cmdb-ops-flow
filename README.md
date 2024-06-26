@@ -8,8 +8,10 @@
    本项目使用gin、gorm和ssh开发。旨在编写一个轻量，易用，多平台的运维项目。
     <br />
      <br />
+      #### 新版本地址： https://github.com/qishu321/CatMi-devops
+
   </p>
-  #### 新版本地址https://github.com/qishu321/CatMi-devops
+    <br />
 ## 技术栈 
 
 #### 后端 Golang 1.19
