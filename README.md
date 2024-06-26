@@ -9,6 +9,7 @@
     <br />
      <br />
   </p>
+  #### 新版本地址https://github.com/qishu321/CatMi-devops
 ## 技术栈 
 
 #### 后端 Golang 1.19
